@@ -15,9 +15,19 @@ class temple:
     __list = []
 
     def add(task):
+
+        temple.__read()
+        for t in temple.__list:
+            print(t.name)
+            if task.name == t.name:
+                t.time = task.time
+       
+
         f = open("temple.txt", 'a')
         f.write(f"{task.name}, {task.time}\n")
         f.close()
+
+
 
     def __read():
         f = open("temple.txt", 'r')
@@ -38,6 +48,11 @@ class temple:
     def note():
         pass
     
+    def notify():
+        os.system("termux-notification")
+        os.system("termux-media-player play ../storage/downloads/my_baby.mp3")
+
+
     def start_timer():
         temple.__read()
         for i in range(len(temple.__list)):
@@ -48,20 +63,20 @@ class temple:
             x.start()
             form = re.search("\D..", task.time)
             if form.group() == "min":
-                time.sleep(int(re.sub("\D..", '', task.time)) * 60)
+                time.sleep((int(re.sub("\D..", '', task.time)) - 4) * 60)
             elif form.group() == "sec":
                 time.sleep(int(re.sub("\D..", '', task.time)))
             x.join()
             if i < len(temple.__list) - 1:
                 next_task = temple.__list[i + 1]
-                os.system("termux-notification")
-                os.system("termux-media-player play ../storage/downloads/my_baby.mp3")
+                temple.notify()
                 print(f"pause, now {next_task.name.upper()}!")
                 cont  = 'n'
                 while cont == 'n':
                     print("Are you ready? [Y/n]")
                     cont = input()
                     
+        temple.notify()
         print("end circle")
 
 argv = sys.argv[1:]
